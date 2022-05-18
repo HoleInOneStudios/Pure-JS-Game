@@ -16,6 +16,8 @@ document.body.onload = () => {
 
     player = new Player(0, 0, undefined, "black");
 
+    HandleInput();
+
     setInterval(() => {
         update();
     }, interval);
@@ -75,6 +77,23 @@ function drawGrid() {
         ctx.lineTo(width * scale, i * scale);
         ctx.stroke();
     }
+}
+
+function HandleInput() {
+    document.body.addEventListener("keydown", e => {
+        if (e.keyCode === 37) {
+            player.move(-1, 0);
+        } else if (e.keyCode === 38) {
+            player.move(0, -1);
+        }
+        if (e.keyCode === 39) {
+            player.move(1, 0);
+        }
+        if (e.keyCode === 40) {
+            player.move(0, 1);
+        }
+    });
+
 }
 
 class Entity {
