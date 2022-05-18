@@ -44,7 +44,16 @@ function update() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     drawGrid();
+
+    //draw the entities
+    entities.forEach(entity => {
+        entity.draw();
+    });
+
+    //draw the player
     player.draw();
+
+    //TODO draw the ui
 }
 
 /**
