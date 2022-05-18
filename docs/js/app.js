@@ -14,6 +14,8 @@ document.body.onload = () => {
 
     resize();
 
+    entities.push(new Entity(5, 5));
+
     player = new Player(0, 0, undefined, "black");
 
     HandleInput();
@@ -82,23 +84,32 @@ function drawGrid() {
 function HandleInput() {
     document.body.addEventListener("keydown", e => {
         e.preventDefault();
+        let x = 0, y = 0;
         if (e.keyCode === 37) {  //left
             if (player.x > 0) {
-                player.move(-1, 0);
+                x = -1;
             }
         } else if (e.keyCode === 38) {  //down
             if (player.y > 0) {
-                player.move(0, -1);
+                y = -1;
             }
         } else if (e.keyCode === 39) {  //right
             if (player.x < resolution - 1) {
-                player.move(1, 0);
+                x = 1;
             }
         } else if (e.keyCode === 40) { //up
             if (player.y < resolution * (height/width) - 1) {
-                player.move(0, 1);
+                y = 1;
             }
         }
+        entities.forEach(en => {
+            if (en.x === player.x + x && en.y === player.y + y) {
+                x = 0;
+                y = 0;
+            }
+        });
+
+        player.move(x, y);
         //console.log(player.x + ", " + player.y);
     });
 
