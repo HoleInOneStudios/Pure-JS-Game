@@ -82,17 +82,24 @@ function drawGrid() {
 function HandleInput() {
     document.body.addEventListener("keydown", e => {
         e.preventDefault();
-        if (e.keyCode === 37) { // down arrow
-            player.move(-1, 0);
-        } else if (e.keyCode === 38) { // up arrow
-            player.move(0, -1);
+        if (e.keyCode === 37) {  //left
+            if (player.x > 0) {
+                player.move(-1, 0);
+            }
+        } else if (e.keyCode === 38) {  //down
+            if (player.y > 0) {
+                player.move(0, -1);
+            }
+        } else if (e.keyCode === 39) {  //right
+            if (player.x < resolution - 1) {
+                player.move(1, 0);
+            }
+        } else if (e.keyCode === 40) { //up
+            if (player.y < resolution * (height/width) - 1) {
+                player.move(0, 1);
+            }
         }
-        if (e.keyCode === 39) { // right arrow
-            player.move(1, 0);
-        }
-        if (e.keyCode === 40) { // left arrow
-            player.move(0, 1);
-        }
+        console.log(player.x + ", " + player.y);
     });
 
 }
