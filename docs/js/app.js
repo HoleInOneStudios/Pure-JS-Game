@@ -8,15 +8,31 @@ let canvas,
     entities = [],
     player;
 
+let image = {
+    ball1: new Image(),
+    ball2: new Image(),
+    ball3: new Image(),
+    ball4: new Image(),
+    ball5: new Image(),
+    ball6: new Image(),
+}
+
+image.ball1.src = "img/ball1.png";
+image.ball2.src = "img/ball2.png";
+image.ball3.src = "img/ball3.png";
+image.ball4.src = "img/ball4.png";
+image.ball5.src = "img/ball5.png";
+image.ball6.src = "img/ball6.png";
+
 document.body.onload = () => {
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
 
     resize();
 
-    entities.push(new Entity(5, 5));
+    entities.push(new Entity(5, 5, image.ball2));
 
-    player = new Player(0, 0, undefined, "black");
+    player = new Player(0, 0, image.ball1, "black");
 
     HandleInput();
 
