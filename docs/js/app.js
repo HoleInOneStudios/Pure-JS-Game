@@ -82,15 +82,15 @@ function drawGrid() {
 function HandleInput() {
     document.body.addEventListener("keydown", e => {
         e.preventDefault();
-        if (e.keyCode === 37) {
+        if (e.keyCode === 37) { // down arrow
             player.move(-1, 0);
-        } else if (e.keyCode === 38) {
+        } else if (e.keyCode === 38) { // up arrow
             player.move(0, -1);
         }
-        if (e.keyCode === 39) {
+        if (e.keyCode === 39) { // right arrow
             player.move(1, 0);
         }
-        if (e.keyCode === 40) {
+        if (e.keyCode === 40) { // left arrow
             player.move(0, 1);
         }
     });
