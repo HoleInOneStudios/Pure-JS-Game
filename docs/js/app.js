@@ -1,19 +1,29 @@
-let canvas, ctx, width = 400, height = 300, scale = 1, interval = 60, resolution = 20;
+let canvas,
+    ctx,
+    width = 400,
+    height = 300,
+    scale = 1,
+    interval = 60,
+    resolution = 20,
+    entities = [],
+    player;
 
 document.body.onload = () => {
-    canvas = document.getElementById('canvas');
-    ctx = canvas.getContext('2d');
+    canvas = document.getElementById("canvas");
+    ctx = canvas.getContext("2d");
 
     resize();
+
+    player = new Player(0, 0, undefined, "black");
 
     setInterval(() => {
         update();
     }, interval);
-}
+};
 
 document.body.onresize = () => {
     resize();
-}
+};
 
 /**
  * Resize the canvas to fit the window while maintaining the aspect ratio.
@@ -30,16 +40,19 @@ function resize() {
 function update() {
     //Clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     drawGrid();
-
+    player.draw();
 }
 
+/**
+ * Draws a grid on the canvas.
+ */
 function drawGrid() {
     //Draw the grid
-    ctx.strokeStyle = '#000';
+    ctx.strokeStyle = "#000";
     ctx.lineWidth = 1;
     for (let i = 0; i < width; i += resolution) {
         ctx.beginPath();
@@ -52,5 +65,30 @@ function drawGrid() {
         ctx.moveTo(0, i * scale);
         ctx.lineTo(width * scale, i * scale);
         ctx.stroke();
+    }
+}
+
+class Entity {
+    constructor (x, y, tex, col) {
+        this.x = x || 0;
+        this.y = y || 0;
+        this.color = col || "#000";
+        this.texture = tex || undefined;
+    }
+
+    draw() {
+        if (this.texture) {
+            ctx.drawImage(this.texture, this.x * resolution * scale, this.y * resolution * scale, resolution * scale, resolution * scale);
+        }
+        else {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x * resolution * scale, this.y * resolution * scale, resolution * scale, resolution * scale);
+        }
+    }
+}
+
+class Player extends Entity {
+    constructor (x, y, tex, col) {
+        super(x, y, tex, col);
     }
 }
