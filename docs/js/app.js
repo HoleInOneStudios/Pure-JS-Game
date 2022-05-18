@@ -81,6 +81,7 @@ function drawGrid() {
 
 function HandleInput() {
     document.body.addEventListener("keydown", e => {
+        e.preventDefault();
         if (e.keyCode === 37) {
             player.move(-1, 0);
         } else if (e.keyCode === 38) {
