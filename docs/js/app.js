@@ -99,7 +99,7 @@ function HandleInput() {
                 player.move(0, 1);
             }
         }
-        console.log(player.x + ", " + player.y);
+        //console.log(player.x + ", " + player.y);
     });
 
 }
