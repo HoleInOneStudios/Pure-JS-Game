@@ -85,6 +85,16 @@ class Entity {
             ctx.fillRect(this.x * resolution * scale, this.y * resolution * scale, resolution * scale, resolution * scale);
         }
     }
+
+    move(x, y) {
+        this.x += x;
+        this.y += y;
+    }
+
+    goto(x, y) {
+        this.x = x;
+        this.y = y;
+    }
 }
 
 class Player extends Entity {
