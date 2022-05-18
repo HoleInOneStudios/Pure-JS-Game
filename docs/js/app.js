@@ -135,6 +135,10 @@ class Entity {
                 y = 0;
             }
         });
+        if (!(this === player) && this.x + x === player.x && this.y + y === player.y) {
+            x = 0;
+            y = 0;
+        }
 
         this.x += x;
         this.y += y;
@@ -142,7 +146,7 @@ class Entity {
 
     goto(x, y) {
         entities.forEach(en => {
-            if (!en.x === x && !en.y === y && !(en === this)) {
+            if (!(en.x === x) && !(en.y === y) && !(en === this)) {
                 this.x = x;
                 this.y = y;
             }
