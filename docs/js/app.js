@@ -102,12 +102,7 @@ function HandleInput() {
                 y = 1;
             }
         }
-        entities.forEach(en => {
-            if (en.x === player.x + x && en.y === player.y + y) {
-                x = 0;
-                y = 0;
-            }
-        });
+        
 
         player.move(x, y);
         //console.log(player.x + ", " + player.y);
@@ -134,13 +129,25 @@ class Entity {
     }
 
     move(x, y) {
+        entities.forEach(en => {
+            if (en.x === this.x + x && en.y === this.y + y && !(en === this)) {
+                x = 0;
+                y = 0;
+            }
+        });
+
         this.x += x;
         this.y += y;
     }
 
     goto(x, y) {
-        this.x = x;
-        this.y = y;
+        entities.forEach(en => {
+            if (!en.x === x && !en.y === y && !(en === this)) {
+                this.x = x;
+                this.y = y;
+            }
+        });
+        
     }
 }
 
