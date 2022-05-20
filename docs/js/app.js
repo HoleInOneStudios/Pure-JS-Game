@@ -17,6 +17,14 @@ let image = {
     ball6: new Image(),
 }
 
+let audio = {
+    click1: new Audio(),
+    click2: new Audio(),
+    click3: new Audio(),
+    click4: new Audio(),
+    click5: new Audio(),
+}
+
 image.ball1.src = "img/ball1.png";
 image.ball2.src = "img/ball2.png";
 image.ball3.src = "img/ball3.png";
@@ -24,23 +32,31 @@ image.ball4.src = "img/ball4.png";
 image.ball5.src = "img/ball5.png";
 image.ball6.src = "img/ball6.png";
 
+audio.click1.src = "audio/click1.ogg";
+audio.click2.src = "audio/click2.ogg";
+audio.click3.src = "audio/click3.ogg";
+audio.click4.src = "audio/click4.ogg";
+audio.click5.src = "audio/click5.ogg";
+
+// Initialize the canvas and start the game loop
 document.body.onload = () => {
-    canvas = document.getElementById("canvas");
-    ctx = canvas.getContext("2d");
+    canvas = document.getElementById("canvas"); //get the canvas
+    ctx = canvas.getContext("2d"); //get the context
 
-    resize();
+    resize(); //resize the canvas
 
-    entities.push(new Entity(5, 5, image.ball2));
+    //entities.push(new Entity(5, 5, image.ball2)); 
 
-    player = new Player(0, 0, image.ball1, "black");
+    player = new Player(0, 0, image.ball1, "black"); //create the player
 
-    HandleInput();
+    HandleInput(); //add event listeners to handle the input
 
-    setInterval(() => {
+    setInterval(() => { //start the game loop
         update();
     }, interval);
 };
 
+// when the window is resized, resize the canvas
 document.body.onresize = () => {
     resize();
 };
@@ -49,9 +65,9 @@ document.body.onresize = () => {
  * Resize the canvas to fit the window while maintaining the aspect ratio.
  */
 function resize() {
-    scale = Math.min(window.innerWidth / width, window.innerHeight / height);
-    canvas.width = width * scale;
-    canvas.height = height * scale;
+    scale = Math.min(window.innerWidth / width, window.innerHeight / height); //calculate the scale
+    canvas.width = width * scale; //set the width
+    canvas.height = height * scale; //set the height
 }
 
 /**
@@ -83,13 +99,13 @@ function drawGrid() {
     //Draw the grid
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 1;
-    for (let i = 0; i < width; i += resolution) {
+    for (let i = 0; i < width; i += resolution) { //horizontal lines
         ctx.beginPath();
         ctx.moveTo(i * scale, 0);
         ctx.lineTo(i * scale, height * scale);
         ctx.stroke();
     }
-    for (let i = 0; i < height; i += resolution) {
+    for (let i = 0; i < height; i += resolution) { //vertical lines
         ctx.beginPath();
         ctx.moveTo(0, i * scale);
         ctx.lineTo(width * scale, i * scale);
@@ -97,6 +113,9 @@ function drawGrid() {
     }
 }
 
+/**
+ * Handles the input from the user.
+ */
 function HandleInput() {
     document.body.addEventListener("keydown", e => {
         
@@ -129,6 +148,8 @@ function HandleInput() {
     });
 
     document.body.addEventListener("mousedown", e => {
+        audio.click4.play();
+        
         let x = e.clientX - canvas.offsetLeft,
             y = e.clientY - canvas.offsetTop;
 
@@ -143,52 +164,101 @@ function HandleInput() {
     });
 }
 
+/**
+ * Entity class.
+ */
 class Entity {
+    /**
+     * Constructor for the entity.
+     * @param {number} x x-coordinate
+     * @param {number} y y-coordinate
+     * @param {Image} tex texture
+     * @param {number} col color
+     */
     constructor (x, y, tex, col) {
         this.x = x || 0;
         this.y = y || 0;
-        this.color = col || "#000";
+        this.color = col || 0x000;
         this.texture = tex || undefined;
     }
 
+    /**
+     * Draws the entity on the canvas.
+     */
     draw() {
-        if (this.texture) {
+        if (this.texture) { //if there is a texture
+            // draw the texture
             ctx.drawImage(this.texture, this.x * resolution * scale, this.y * resolution * scale, resolution * scale, resolution * scale);
         }
-        else {
+        else { //if there is no texture
+            // draw the color
             ctx.fillStyle = this.color;
             ctx.fillRect(this.x * resolution * scale, this.y * resolution * scale, resolution * scale, resolution * scale);
         }
     }
 
+    /**
+     * Moves the entity by the given amount.
+     * @param {number} x x-coordinate
+     * @param {number} y y-coordinate
+     */
     move(x, y) {
         entities.forEach(en => {
-            if (en.x === this.x + x && en.y === this.y + y && !(en === this)) {
+            if (en.x === this.x + x && en.y === this.y + y && !(en === this)) { //if there is an entity in the way
+                // stop moving
                 x = 0;
                 y = 0;
             }
         });
-        if (!(this === player) && this.x + x === player.x && this.y + y === player.y) {
+        if (!(this === player) && this.x + x === player.x && this.y + y === player.y) { //if the player is in the way
+            // stop moving
             x = 0;
             y = 0;
         }
 
+        // move the entity
         this.x += x;
         this.y += y;
     }
 
+    /**
+     * Moves the entity to the given coordinates.
+     * @param {number} x x-coordinate
+     * @param {number} y y-coordinate
+     */
     goto(x, y) {
         entities.forEach(en => {
-            if (!((en.x === x) && (en.y === y)) && !(en === this)) {
-                this.x = x;
-                this.y = y;
+            if (((en.x === x) && (en.y === y)) && !(en === this)) { // if en does share the same coordinates as this and is not this
+                // cancel the goto
+                this.x = 0;
+                this.y = 0;
             }
         });
+
+        if (!(this === player) && (this.x === player.x && this.y === player.y)) { //if the player is in the way
+            // cancel the goto
+            this.x = 0;
+            this.y = 0;
+        }
+
+        // move the entity
+        this.x = x;
+        this.y = y;
         
     }
 }
 
+/**
+ * Player class.
+ */
 class Player extends Entity {
+    /**
+     * Constructor for the player.
+     * @param {number} x 
+     * @param {number} y 
+     * @param {Image} tex 
+     * @param {number} col 
+     */
     constructor (x, y, tex, col) {
         super(x, y, tex, col);
     }
