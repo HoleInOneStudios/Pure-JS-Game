@@ -74,7 +74,7 @@ function update() {
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    drawGrid();
+    drawDebugGrid();
 
     //draw the entities
     entities.forEach(entity => {
@@ -90,7 +90,7 @@ function update() {
 /**
  * Draws a grid on the canvas.
  */
-function drawGrid() {
+function drawDebugGrid() {
     //Draw the grid
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 1;
@@ -105,6 +105,16 @@ function drawGrid() {
         ctx.moveTo(0, i * scale);
         ctx.lineTo(width * scale, i * scale);
         ctx.stroke();
+    }
+
+    //Draw coordinates
+    ctx.fillStyle = "#000";
+    ctx.font = "12px Arial";
+    for (let i = 0; i < width; i += resolution) { //horizontal lines
+        for (let j = 0; j <= height; j += resolution) { //vertical lines
+            ctx.fillText(`(${i/resolution}, ${j/resolution})`, i * scale, j * scale);
+        }
+
     }
 }
 
