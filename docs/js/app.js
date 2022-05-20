@@ -120,22 +120,22 @@ function HandleInput() {
     document.body.addEventListener("keydown", e => {
         
         let x = 0, y = 0;
-        if (e.keyCode === 37) {  //left
+        if (e.keyCode === 37) {  //left arrow
             e.preventDefault();
             if (player.x > 0) {
                 x = -1;
             }
-        } else if (e.keyCode === 38) {  //down
+        } else if (e.keyCode === 38) {  //down arrow
             if (player.y > 0) {
                 e.preventDefault();
                 y = -1;
             }
-        } else if (e.keyCode === 39) {  //right
+        } else if (e.keyCode === 39) {  //right arrow
             e.preventDefault();
             if (player.x < resolution - 1) {
                 x = 1;
             }
-        } else if (e.keyCode === 40) { //up
+        } else if (e.keyCode === 40) { //up arrow
             e.preventDefault();
             if (player.y < resolution * (height/width) - 1) {
                 y = 1;
@@ -204,13 +204,13 @@ class Entity {
      */
     move(x, y) {
         entities.forEach(en => {
-            if (en.x === this.x + x && en.y === this.y + y && !(en === this)) { //if there is an entity in the way
+            if (this.checkCollision(en) && !(en === this)) { //if there is an entity in the way
                 // stop moving
                 x = 0;
                 y = 0;
             }
         });
-        if (!(this === player) && this.x + x === player.x && this.y + y === player.y) { //if the player is in the way
+        if (this.checkCollision(player) && !(this === player)) { //if the player is in the way
             // stop moving
             x = 0;
             y = 0;
@@ -228,14 +228,14 @@ class Entity {
      */
     goto(x, y) {
         entities.forEach(en => {
-            if (((en.x === x) && (en.y === y)) && !(en === this)) { // if en does share the same coordinates as this and is not this
-                // cancel the goto
-                this.x = 0;
-                this.y = 0;
+            if (this.checkCollision(en) && !(en === this)) { //if there is an entity in the way
+                // stop moving
+                x = this.x;
+                y = this.y;
             }
         });
 
-        if (!(this === player) && (this.x === player.x && this.y === player.y)) { //if the player is in the way
+        if (this.checkCollision(player) && !(this === player)) { //if the player is in the way
             // cancel the goto
             this.x = 0;
             this.y = 0;
@@ -245,6 +245,31 @@ class Entity {
         this.x = x;
         this.y = y;
         
+    }
+
+    /**
+     * Checks if the entity is in the given coordinates.
+     * @param {number} x 
+     * @param {number} y 
+     * @returns {boolean} true if the entity is at the given coordinates
+     */
+    checkCollision(x, y) {
+        if (this.x === x && this.y === y) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the entity is at the same coordinates as the entity given.
+     * @param {Entity} en 
+     * @returns {boolean} true if the entity is at the same coordinates as the given entity
+     */
+    checkCollision(en) {
+        if (this.x === en.x && this.y === en.y) {
+            return true;
+        }
+        return false;
     }
 }
 
