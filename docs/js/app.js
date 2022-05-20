@@ -235,7 +235,7 @@ class Entity {
      */
     move(_x, _y) {
         entities.forEach(en => {
-            if ((en !== this) && en.x === this.x + _x && en.y === this.y + _y) {
+            if (this.checkCollisionForMove(_x, _y, en)) {
                 _x = 0;
                 _y = 0;
             }
@@ -260,7 +260,7 @@ class Entity {
     goto(_x, _y) {
         //check if space is available
         entities.forEach(en => {
-            if ((en !== this) && en.x === _x && en.y === _y) {
+            if ((en !== this) && en.checkCollision(_x, _y)) {
                 _x = this.x;
                 _y = this.y;
             }
@@ -271,6 +271,27 @@ class Entity {
         this.x = _x;
         this.y = _y;
 
+    }
+
+    /**
+     * 
+     * @param {number} _x x-coordinate modifier
+     * @param {number} _y y-coordinate modifier
+     * @param {Entity} en entity to check collision with
+     * @returns {boolean} if space is occupied
+     */
+    checkCollisionForMove(_x, _y, en) {
+        return (en !== this) && en.x === this.x + _x && en.y === this.y + _y;
+    }
+
+    /**
+     * 
+     * @param {number} x x-coordinate
+     * @param {number} y y-coordinate
+     * @returns {boolean} if the entity is at the given coordinates
+     */
+    checkCollision(_x, _y) {
+        return this.x === _x && this.y === _y;
     }
 }
 
