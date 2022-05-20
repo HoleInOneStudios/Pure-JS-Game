@@ -116,15 +116,19 @@ function HandleInput() {
         let x = 0, y = 0;
         if (e.keyCode === 37) {  //left arrow
             e.preventDefault();
+            audio.click1.play();
             x = -1;
         } else if (e.keyCode === 38) {  //down arrow
             e.preventDefault();
+            audio.click1.play();
             y = -1;
         } else if (e.keyCode === 39) {  //right arrow
             e.preventDefault();
+            audio.click1.play();
             x = 1;
         } else if (e.keyCode === 40) { //up arrow
             e.preventDefault();
+            audio.click1.play();
             y = 1;
         }
         
@@ -134,19 +138,21 @@ function HandleInput() {
     });
 
     document.body.addEventListener("mousedown", e => {
-        audio.click4.play();
-        
-        let x = e.clientX - canvas.offsetLeft,
-            y = e.clientY - canvas.offsetTop;
+        if (e.button === 0) { //left click
+            audio.click2.play();
 
-        //console.log(x, y);
+            let x = e.clientX - canvas.offsetLeft,
+                y = e.clientY - canvas.offsetTop;
 
-        x = Math.floor(x /scale / resolution);
-        y = Math.floor(y /scale / resolution);
+            //console.log(x, y);
 
-        //console.log(x, y);
+            x = Math.floor(x / scale / resolution);
+            y = Math.floor(y / scale / resolution);
 
-        player.goto(x, y);
+            //console.log(x, y);
+
+            player.goto(x, y);
+        }
     });
 }
 
