@@ -38,9 +38,10 @@ document.body.onload = () => {
 
     resize(); //resize the canvas
 
-    //entities.push(new Entity(5, 5, image.ball2)); 
+    entities.push(new Entity(0, 0, image.ball1, 0x000)); //add the player
+    entities.push(new Entity(5, 5, image.ball2, 0xf00)); //add a ball
 
-    player = new Player(0, 0, image.ball1, "black"); //create the player
+    player = entities[0]; //set the player
 
     HandleInput(); //add event listeners to handle the input
 
@@ -115,24 +116,16 @@ function HandleInput() {
         let x = 0, y = 0;
         if (e.keyCode === 37) {  //left arrow
             e.preventDefault();
-            if (player.x > 0) {
-                x = -1;
-            }
+            x = -1;
         } else if (e.keyCode === 38) {  //down arrow
-            if (player.y > 0) {
-                e.preventDefault();
-                y = -1;
-            }
+            e.preventDefault();
+            y = -1;
         } else if (e.keyCode === 39) {  //right arrow
             e.preventDefault();
-            if (player.x < resolution - 1) {
-                x = 1;
-            }
+            x = 1;
         } else if (e.keyCode === 40) { //up arrow
             e.preventDefault();
-            if (player.y < resolution * (height/width) - 1) {
-                y = 1;
-            }
+            y = 1;
         }
         
 
@@ -162,7 +155,7 @@ function HandleInput() {
  */
 async function LoadImages() {
     for (const key in image) {
-        await ImageLoader(key);
+        ImageLoader(key);
     }
 }
 
@@ -171,7 +164,7 @@ async function LoadImages() {
  */
 async function LoadAudio() {
     for (const key in audio) {
-        await AudioLoader(key);
+        AudioLoader(key);
     }
 }
 
@@ -237,77 +230,47 @@ class Entity {
 
     /**
      * Moves the entity by the given amount.
-     * @param {number} x x-coordinate
-     * @param {number} y y-coordinate
+     * @param {number} _x x-coordinate
+     * @param {number} _y y-coordinate
      */
-    move(x, y) {
+    move(_x, _y) {
         entities.forEach(en => {
-            if (this.checkCollision(en) && !(en === this)) { //if there is an entity in the way
-                // stop moving
-                x = 0;
-                y = 0;
+            if ((en !== this) && en.x === this.x + _x && en.y === this.y + _y) {
+                _x = 0;
+                _y = 0;
             }
         });
-        if (this.checkCollision(player) && !(this === player)) { //if the player is in the way
-            // stop moving
-            x = 0;
-            y = 0;
-        }
 
-        // move the entity
-        this.x += x;
-        this.y += y;
+        if ((this.x + _x >= 0) &&  (this.x + _x <= resolution - 1)) {
+            //move x
+            this.x += _x;
+            
+        }
+        if ((this.y + _y >= 0) && (this.y + _y <= resolution * (height / width) - 1)) {
+            //move y
+            this.y += _y;
+        }
     }
 
     /**
      * Moves the entity to the given coordinates.
-     * @param {number} x x-coordinate
-     * @param {number} y y-coordinate
+     * @param {number} _x x-coordinate
+     * @param {number} _y y-coordinate
      */
-    goto(x, y) {
+    goto(_x, _y) {
+        //check if space is available
         entities.forEach(en => {
-            if (this.checkCollision(en) && !(en === this)) { //if there is an entity in the way
-                // stop moving
-                x = this.x;
-                y = this.y;
+            if ((en !== this) && en.x === _x && en.y === _y) {
+                _x = this.x;
+                _y = this.y;
             }
         });
-
-        if (this.checkCollision(player) && !(this === player)) { //if the player is in the way
-            // cancel the goto
-            this.x = 0;
-            this.y = 0;
-        }
+        
 
         // move the entity
-        this.x = x;
-        this.y = y;
-        
-    }
+        this.x = _x;
+        this.y = _y;
 
-    /**
-     * Checks if the entity is in the given coordinates.
-     * @param {number} x 
-     * @param {number} y 
-     * @returns {boolean} true if the entity is at the given coordinates
-     */
-    checkCollision(x, y) {
-        if (this.x === x && this.y === y) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Checks if the entity is at the same coordinates as the entity given.
-     * @param {Entity} en 
-     * @returns {boolean} true if the entity is at the same coordinates as the given entity
-     */
-    checkCollision(en) {
-        if (this.x === en.x && this.y === en.y) {
-            return true;
-        }
-        return false;
     }
 }
 
