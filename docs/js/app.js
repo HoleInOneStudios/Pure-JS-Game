@@ -31,6 +31,7 @@ let audio = {
 document.body.onload = () => {
     canvas = document.getElementById("canvas"); //get the canvas
     ctx = canvas.getContext("2d"); //get the context
+    ctx.imageSmoothingEnabled = false; //disable image smoothing
 
     //Load Images and Audio
     LoadImages();
