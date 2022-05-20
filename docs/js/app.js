@@ -99,21 +99,25 @@ function drawGrid() {
 
 function HandleInput() {
     document.body.addEventListener("keydown", e => {
-        e.preventDefault();
+        
         let x = 0, y = 0;
         if (e.keyCode === 37) {  //left
+            e.preventDefault();
             if (player.x > 0) {
                 x = -1;
             }
         } else if (e.keyCode === 38) {  //down
             if (player.y > 0) {
+                e.preventDefault();
                 y = -1;
             }
         } else if (e.keyCode === 39) {  //right
+            e.preventDefault();
             if (player.x < resolution - 1) {
                 x = 1;
             }
         } else if (e.keyCode === 40) { //up
+            e.preventDefault();
             if (player.y < resolution * (height/width) - 1) {
                 y = 1;
             }
@@ -124,6 +128,19 @@ function HandleInput() {
         //console.log(player.x + ", " + player.y);
     });
 
+    document.body.addEventListener("mousedown", e => {
+        let x = e.clientX - canvas.offsetLeft,
+            y = e.clientY - canvas.offsetTop;
+
+        console.log(x, y);
+
+        x = Math.floor(x /scale / resolution);
+        y = Math.floor(y /scale / resolution);
+
+        console.log(x, y);
+
+        player.goto(x, y);
+    });
 }
 
 class Entity {
@@ -162,7 +179,7 @@ class Entity {
 
     goto(x, y) {
         entities.forEach(en => {
-            if (!(en.x === x) && !(en.y === y) && !(en === this)) {
+            if (!((en.x === x) && (en.y === y)) && !(en === this)) {
                 this.x = x;
                 this.y = y;
             }
