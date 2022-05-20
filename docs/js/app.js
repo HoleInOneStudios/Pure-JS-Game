@@ -157,18 +157,29 @@ function HandleInput() {
     });
 }
 
+/**
+ * Loads all the images
+ */
 async function LoadImages() {
     for (const key in image) {
         await ImageLoader(key);
     }
 }
 
+/**
+ * Loads all the audio
+ */
 async function LoadAudio() {
     for (const key in audio) {
         await AudioLoader(key);
     }
 }
 
+/**
+ * Loads an image
+ * @param {key} key The key of the image
+ * @returns {Promise} A promise that resolves when the image is loaded
+ */
 function ImageLoader(key) {
     return new Promise((resolve, reject) => {
         image[key] = new Image();
@@ -178,6 +189,11 @@ function ImageLoader(key) {
     });
 }
 
+/**
+ * Loads an audio
+ * @param {key} key 
+ * @returns {Promise} A promise that resolves when the audio is loaded
+ */
 function AudioLoader(key) {
     return new Promise((resolve, reject) => {
         audio[key] = new Audio(`audio/${key}.ogg`);
@@ -185,8 +201,6 @@ function AudioLoader(key) {
         audio[key].onerror = () => reject(new Error(`Could not load audio: ${key}`));
     });
 }
-
-
 
 /**
  * Entity class.
