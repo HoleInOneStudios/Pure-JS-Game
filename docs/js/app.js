@@ -8,40 +8,33 @@ let canvas,
     entities = [],
     player;
 
+// Image Object
 let image = {
-    ball1: new Image(),
-    ball2: new Image(),
-    ball3: new Image(),
-    ball4: new Image(),
-    ball5: new Image(),
-    ball6: new Image(),
+    ball1: undefined,
+    ball2: undefined,
+    ball3: undefined,
+    ball4: undefined,
+    ball5: undefined,
+    ball6: undefined,
 }
 
+// Audio Object
 let audio = {
-    click1: new Audio(),
-    click2: new Audio(),
-    click3: new Audio(),
-    click4: new Audio(),
-    click5: new Audio(),
+    click1: undefined,
+    click2: undefined,
+    click3: undefined,
+    click4: undefined,
+    click5: undefined,
 }
-
-image.ball1.src = "img/ball1.png";
-image.ball2.src = "img/ball2.png";
-image.ball3.src = "img/ball3.png";
-image.ball4.src = "img/ball4.png";
-image.ball5.src = "img/ball5.png";
-image.ball6.src = "img/ball6.png";
-
-audio.click1.src = "audio/click1.ogg";
-audio.click2.src = "audio/click2.ogg";
-audio.click3.src = "audio/click3.ogg";
-audio.click4.src = "audio/click4.ogg";
-audio.click5.src = "audio/click5.ogg";
 
 // Initialize the canvas and start the game loop
 document.body.onload = () => {
     canvas = document.getElementById("canvas"); //get the canvas
     ctx = canvas.getContext("2d"); //get the context
+
+    //Load Images and Audio
+    LoadImages();
+    LoadAudio();
 
     resize(); //resize the canvas
 
@@ -163,6 +156,37 @@ function HandleInput() {
         player.goto(x, y);
     });
 }
+
+async function LoadImages() {
+    for (const key in image) {
+        await ImageLoader(key);
+    }
+}
+
+async function LoadAudio() {
+    for (const key in audio) {
+        await AudioLoader(key);
+    }
+}
+
+function ImageLoader(key) {
+    return new Promise((resolve, reject) => {
+        image[key] = new Image();
+        image[key].src = `img/${key}.png`;
+        image[key].onload = () => resolve();
+        image[key].onerror = () => reject(new Error(`Could not load image: ${key}`));
+    });
+}
+
+function AudioLoader(key) {
+    return new Promise((resolve, reject) => {
+        audio[key] = new Audio(`audio/${key}.ogg`);
+        audio[key].oncanplay = () => resolve();
+        audio[key].onerror = () => reject(new Error(`Could not load audio: ${key}`));
+    });
+}
+
+
 
 /**
  * Entity class.
