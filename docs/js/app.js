@@ -116,19 +116,15 @@ function HandleInput() {
         let x = 0, y = 0;
         if (e.keyCode === 37) {  //left arrow
             e.preventDefault();
-            audio.click1.play();
             x = -1;
         } else if (e.keyCode === 38) {  //down arrow
             e.preventDefault();
-            audio.click1.play();
             y = -1;
         } else if (e.keyCode === 39) {  //right arrow
             e.preventDefault();
-            audio.click1.play();
             x = 1;
         } else if (e.keyCode === 40) { //up arrow
             e.preventDefault();
-            audio.click1.play();
             y = 1;
         }
         
@@ -139,8 +135,6 @@ function HandleInput() {
 
     document.body.addEventListener("mousedown", e => {
         if (e.button === 0) { //left click
-            audio.click2.play();
-
             let x = e.clientX - canvas.offsetLeft,
                 y = e.clientY - canvas.offsetTop;
 
@@ -244,10 +238,11 @@ class Entity {
             if (this.checkCollisionForMove(_x, _y, en)) {
                 _x = 0;
                 _y = 0;
+                audio.click5.play();
             }
         });
 
-        if ((this.x + _x >= 0) &&  (this.x + _x <= resolution - 1)) {
+        if ((this.x + _x >= 0) && (this.x + _x <= resolution - 1)) {
             //move x
             this.x += _x;
             
@@ -255,7 +250,13 @@ class Entity {
         if ((this.y + _y >= 0) && (this.y + _y <= resolution * (height / width) - 1)) {
             //move y
             this.y += _y;
+            
         }
+
+        if (_y !== 0 || _x !== 0) {
+            audio.click5.play();
+        }
+        
     }
 
     /**
@@ -274,6 +275,7 @@ class Entity {
         
 
         // move the entity
+        audio.click2.play();
         this.x = _x;
         this.y = _y;
 
