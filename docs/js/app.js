@@ -132,12 +132,12 @@ function HandleInput() {
         let x = e.clientX - canvas.offsetLeft,
             y = e.clientY - canvas.offsetTop;
 
-        console.log(x, y);
+        //console.log(x, y);
 
         x = Math.floor(x /scale / resolution);
         y = Math.floor(y /scale / resolution);
 
-        console.log(x, y);
+        //console.log(x, y);
 
         player.goto(x, y);
     });
